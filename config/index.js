@@ -2,17 +2,13 @@ module.exports = {
   db: {
     client: 'pg',
     connection: {
-      host: 'localhost',
-      port: 5432,
-      user: 'imdb_user',
-      password: 'imdb_password',
-      database: 'imdb',
+      connectionString: process.env.DATABASE_URL,
+      ssl: { rejectUnauthorized: false },
     },
   },
   imdb: {
-    method: 'GET',
-    hostname: 'www.imdb.com',
-    port: 443,
-    maxRedirects: 20,
+    hostname: process.env.IMDB_HOSTNAME,
+    port: process.env.IMDB_PORT,
+    maxRedirects: process.env.IMDB_MAX_REDIRECTS,
   },
 };

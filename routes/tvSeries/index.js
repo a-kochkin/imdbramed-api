@@ -1,7 +1,7 @@
-const moviePlugin = require('../../services/movie');
+const tvSeriesPlugin = require('../../services/tvSeries');
 
-const movieSchema = {
-  $id: 'Movie',
+const tvSeriesSchema = {
+  $id: 'TVSeries',
   type: 'object',
   required: ['tconst'],
   properties: {
@@ -43,47 +43,47 @@ const movieSchema = {
 };
 
 module.exports = async function (fastify) {
-  fastify.register(moviePlugin);
+  fastify.register(tvSeriesPlugin);
 
-  fastify.addSchema(movieSchema);
+  fastify.addSchema(tvSeriesSchema);
 
   fastify.get('/', {
     schema: {
-      description: 'Default end-point',
-      tags: ['movie'],
+      description: 'Default series end-point',
+      tags: ['tvSeries'],
     },
-  }, async () => 'This is an movie');
+  }, async () => 'This is an tv series');
 
   fastify.get('/random', {
     schema: {
-      description: 'get random movie',
-      tags: ['movie'],
+      description: 'get random tv series',
+      tags: ['tvSeries'],
       response: {
         200: {
           description: 'Success response',
-          $ref: 'Movie#',
+          $ref: 'TVSeries#',
         },
       },
     },
-  }, async () => fastify.movie.getRandomMovie());
+  }, async () => fastify.tvSeries.getRandomTVSeries());
 
   fastify.post('/current', {
     schema: {
-      description: 'get current movie',
-      tags: ['movie'],
+      description: 'get current series',
+      tags: ['tvSeries'],
       response: {
         200: {
           description: 'Success response',
-          $ref: 'Movie#',
+          $ref: 'TVSeries#',
         },
       },
     },
-  }, async () => fastify.movie.getCurrentMovie());
+  }, async () => fastify.tvSeries.getCurrentTVSeries());
 
   fastify.get('/query/:expression', {
     schema: {
-      description: 'search into all movies',
-      tags: ['movie'],
+      description: 'search into all tv series',
+      tags: ['tvSeries'],
       params: {
         type: 'object',
         properties: {
@@ -98,7 +98,7 @@ module.exports = async function (fastify) {
           description: 'Success response',
           type: 'array',
           items: {
-            $ref: 'Movie#',
+            $ref: 'TVSeries#',
           },
         },
       },
@@ -106,6 +106,6 @@ module.exports = async function (fastify) {
   }, async (request) => {
     const { expression } = request.params;
 
-    return fastify.movie.searchMovie(expression);
+    return fastify.tvSeries.searchTVSeries(expression);
   });
 };

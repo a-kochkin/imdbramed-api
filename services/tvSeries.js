@@ -1,11 +1,11 @@
 const fp = require('fastify-plugin');
 const { getRandomSix } = require('../utils');
 
-const Movie = (db, imdb) => {
-  const searchMovie = (expression) => {
-    const tsquery = db.raw("websearch_to_tsquery('simple', ?)", [`"${expression}"`]);
+const TVSeries = (db, imdb) => {
+  const searchTVSeries = (expression) => {
+    const tsquery = db.raw("websearch_to_tsquery('simple', ?)", [`"${expression}":*`]);
 
-    return db('movie')
+    return db('tvSeries')
       .select(['tconst', 'russianTitle', 'englishTitle', 'startYear', 'genres', 'published'])
       .select(db.raw('ts_rank("tsvectorTitle", ?)', [tsquery]))
       .where('tsvectorTitle', '@@', tsquery)
@@ -13,8 +13,8 @@ const Movie = (db, imdb) => {
       .limit(10);
   };
 
-  const getRandomMovie = async () => {
-    const movie = await db('movie')
+  const getRandomTVSeries = async () => {
+    const movie = await db('tvSeries')
       .first(['tconst', 'russianTitle', 'englishTitle', 'startYear', 'genres', 'published'])
       .orderByRaw('random()');
 
@@ -28,19 +28,19 @@ const Movie = (db, imdb) => {
     };
   };
 
-  const getCurrentMovie = async () => {
-    let published = await db('movie')
+  const getCurrentTVSeries = async () => {
+    let published = await db('tvSeries')
       .first(['tconst', 'russianTitle', 'englishTitle', 'startYear', 'genres', 'published'])
       .where({ published: db.raw('now()::date') });
 
     if (!published) {
-      const prePublished = db('movie')
+      const prePublished = db('tvSeries')
         .select(['tconst'])
         .whereNull('published')
         .orderByRaw('random()')
         .limit(1);
 
-      [published] = await db('movie')
+      [published] = await db('tvSeries')
         .update({ published: db.raw('now()::date') })
         .where('tconst', prePublished)
         .returning(['tconst', 'russianTitle', 'englishTitle', 'startYear', 'genres', 'published']);
@@ -57,13 +57,13 @@ const Movie = (db, imdb) => {
   };
 
   return {
-    searchMovie,
-    getRandomMovie,
-    getCurrentMovie,
+    searchTVSeries,
+    getRandomTVSeries,
+    getCurrentTVSeries,
   };
 };
 
 module.exports = fp((fastify, options, next) => {
-  fastify.decorate('movie', Movie(fastify.db, fastify.imdb));
+  fastify.decorate('tvSeries', TVSeries(fastify.db, fastify.imdb));
   next();
 });
