@@ -1,0 +1,34 @@
+{
+  "name": "imdbramed-server",
+  "version": "1.0.0",
+  "description": "This project was bootstrapped with Fastify-CLI.",
+  "main": "app.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "start": "fastify start -l info app.js",
+    "dev": "fastify start -w -l info -P app.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@fastify/autoload": "^5.0.0",
+    "@fastify/cors": "^8.1.0",
+    "@fastify/sensible": "^5.0.0",
+    "@fastify/swagger": "^7.4.1",
+    "css-select": "^5.1.0",
+    "fastify": "^4.0.0",
+    "fastify-cli": "^5.1.0",
+    "fastify-plugin": "^4.0.0",
+    "htmlparser2": "^8.0.1",
+    "knex": "^2.2.0",
+    "pg": "^8.7.3"
+  },
+  "devDependencies": {
+    "eslint": "^8.22.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-plugin-import": "^2.26.0"
+  }
+}
